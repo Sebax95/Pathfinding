@@ -6,113 +6,154 @@ using Debug = UnityEngine.Debug;
 
 public class Pathfinding : MonoBehaviour
 {
-    static Pathfinding Instance;
+    private static Pathfinding instance;
+
+    private const string PATH_NOT_FOUND_MESSAGE = "No se encontró un camino. Tiempo total transcurrido: {0} ms.";
+    private const string PATH_FOUND_MESSAGE = "Path encontrado en {0} ms.";
     
-    public GridManager gridManager;
-
-    public bool useTheta;
-    public Transform startPosition;
-    public Transform targetPosition;
-
-    public float maxExecutionTimePerFrame = 10f;
+    public bool UseTheta;
+    public Transform StartPosition;
+    public Transform TargetPosition;
+    public float MaxExecutionTimePerFrame = 10f;
 
     private void Awake()
     {
-        if(Instance == null) 
-            Instance = this;
+        InitializeInstance();
+    }
+    private void InitializeInstance()
+    {
+        if (instance == null)
+            instance = this;
         else
-            Destroy(this);
+            Destroy(gameObject);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (IsStartPathfindingKeyPressed())
         {
-            UnityEngine.Debug.Log("Iniciando búsqueda de camino con time slicing...");
-            StartCoroutine(FindPathWithTimeSlicing(startPosition.position, targetPosition.position));
+            Debug.Log("Iniciando búsqueda de camino con time slicing...");
+            StartCoroutine(FindPathWithTimeSlicing(StartPosition.position, TargetPosition.position));
         }
     }
 
-    IEnumerator FindPathWithTimeSlicing(Vector3 startPos, Vector3 targetPos)
+    private IEnumerator FindPathWithTimeSlicing(Vector3 start, Vector3 target)
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+        Stopwatch totalStopwatch = StartStopwatch();
+        Node startNode = GridManager.Instance.GetNodeFromWorldPosition(start);
+        Node targetNode = GridManager.Instance.GetNodeFromWorldPosition(target);
 
-        Node startNode = gridManager.GetNodeFromWorldPosition(startPos);
-        Node targetNode = gridManager.GetNodeFromWorldPosition(targetPos);
-
-        List<Node> openSet = new List<Node>();
+        List<Node> openSet = new List<Node> { startNode };
         HashSet<Node> closedSet = new HashSet<Node>();
-
-        openSet.Add(startNode);
 
         while (openSet.Count > 0)
         {
-            Stopwatch frameStopwatch = new Stopwatch();
-            frameStopwatch.Start();
-
-            Node currentNode = openSet[0];
-            for (int i = 1; i < openSet.Count; i++)
-            {
-                if (openSet[i].FCost < currentNode.FCost ||
-                    (openSet[i].FCost == currentNode.FCost && openSet[i].HCost < currentNode.HCost))
-                {
-                    currentNode = openSet[i];
-                }
-            }
-
+            Node currentNode = GetLowestCostNode(openSet);
             openSet.Remove(currentNode);
             closedSet.Add(currentNode);
 
             if (currentNode == targetNode)
             {
-                stopwatch.Stop();
-                Debug.Log($"Path encontrado en {stopwatch.ElapsedMilliseconds} ms.");
+                totalStopwatch.Stop();
+                Debug.LogFormat(PATH_FOUND_MESSAGE, totalStopwatch.ElapsedMilliseconds);
                 RetracePath(startNode, targetNode);
                 yield break;
             }
 
-            foreach (Node neighbor in gridManager.GetNeighbours(currentNode))
-            {
-                if (!neighbor.IsWalkable || closedSet.Contains(neighbor)) continue;
+            ProcessNeighbors(currentNode, targetNode, openSet, closedSet);
 
-                float newGCostToNeighbor = currentNode.GCost +
-                                           Vector3.Distance(currentNode.WorldPosition, neighbor.WorldPosition) + neighbor.Weight;
-
-                if (newGCostToNeighbor < neighbor.GCost || !openSet.Contains(neighbor))
-                {
-                    neighbor.GCost = newGCostToNeighbor;
-                    neighbor.HCost = Vector3.Distance(neighbor.WorldPosition, targetNode.WorldPosition);
-                    neighbor.ParentNode = currentNode;
-
-                    if (!openSet.Contains(neighbor))
-                        openSet.Add(neighbor);
-                }
-            }
-            frameStopwatch.Stop();
-            if (frameStopwatch.ElapsedMilliseconds > maxExecutionTimePerFrame)
+            if (!ShouldPauseExecution())
             {
                 Debug.Log("Detengo ejecución para el siguiente frame...");
                 yield return null;
             }
         }
 
-        stopwatch.Stop();
-        Debug.Log($"No se encontró un camino. Tiempo total transcurrido: {stopwatch.ElapsedMilliseconds} ms.");
+        totalStopwatch.Stop();
+        Debug.LogFormat(PATH_NOT_FOUND_MESSAGE, totalStopwatch.ElapsedMilliseconds);
+    }
+    
+    private bool IsStartPathfindingKeyPressed() => Input.GetKeyDown(KeyCode.Space);
+
+    private Stopwatch StartStopwatch()
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        return stopwatch;
     }
 
-    /*private List<Node> Theta(List<Node> path)
+    private Node GetLowestCostNode(List<Node> nodeList)
     {
-        for (int i = 1; i < path.Count - 1; i++)
+        Node lowestCostNode = nodeList[0];
+        for (int i = 1; i < nodeList.Count; i++)
         {
-            if (!path[i - 1].HasLineOfSight(path[i + 1]))
-                path.RemoveAt(i--);
+            Node node = nodeList[i];
+            if (node.FCost < lowestCostNode.FCost || (node.FCost == lowestCostNode.FCost && node.HCost < lowestCostNode.HCost)) 
+                lowestCostNode = node;
         }
 
+        return lowestCostNode;
+    }
+
+    private void ProcessNeighbors(Node currentNode, Node targetNode, List<Node> openSet, HashSet<Node> closedSet)
+    {
+        foreach (Node neighbor in GridManager.Instance.GetNeighbors(currentNode))
+        {
+            if (!CanProcessNeighbor(neighbor, closedSet))
+                continue;
+
+            float newGCostToNeighbor = GetNewGCost(currentNode, neighbor);
+
+            if (newGCostToNeighbor < neighbor.GCost || !openSet.Contains(neighbor))
+            {
+                UpdateNeighborCosts(neighbor, currentNode, newGCostToNeighbor, targetNode);
+                if (!openSet.Contains(neighbor))
+                    openSet.Add(neighbor);
+            }
+        }
+    }
+
+    private bool CanProcessNeighbor(Node neighbor, HashSet<Node> closedSet) =>
+        neighbor.IsWalkable && !closedSet.Contains(neighbor);
+
+    private float GetNewGCost(Node currentNode, Node neighbor) =>
+        currentNode.GCost +
+        Vector3.Distance(currentNode.WorldPosition, neighbor.WorldPosition) +
+        neighbor.Weight;
+
+    private void UpdateNeighborCosts(Node neighbor, Node currentNode, float newGCost, Node targetNode)
+    {
+        neighbor.GCost = newGCost;
+        neighbor.HCost = Vector3.Distance(neighbor.WorldPosition, targetNode.WorldPosition);
+        neighbor.ParentNode = currentNode;
+    }
+
+    private bool ShouldPauseExecution() =>
+        Stopwatch.GetTimestamp() / (float)Stopwatch.Frequency > MaxExecutionTimePerFrame / 1000f;
+
+    private void RetracePath(Node startNode, Node targetNode)
+    {
+        List<Node> path = BuildPathFromNodes(startNode, targetNode);
+        GridManager.Instance.Path = UseTheta ? OptimizePathWithTheta(path) : path;
+        Debug.Log("Camino trazado con éxito.");
+    }
+
+    private List<Node> BuildPathFromNodes(Node startNode, Node targetNode)
+    {
+        List<Node> path = new List<Node>();
+        Node currentNode = targetNode;
+
+        while (currentNode != startNode)
+        {
+            path.Add(currentNode);
+            currentNode = currentNode.ParentNode;
+        }
+
+        path.Reverse();
         return path;
-    }*/
-    
-    private List<Node> Theta(List<Node> path)
+    }
+
+    private List<Node> OptimizePathWithTheta(List<Node> path)
     {
         if (path == null || path.Count < 3)
             return path;
@@ -129,25 +170,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
 
-        optimizedPath.Add(path[^1]); // Agregar el nodo final
+        optimizedPath.Add(path[^1]);
         return optimizedPath;
-    }
-
-
-    void RetracePath(Node startNode, Node endNode)
-    {
-        List<Node> path = new List<Node>();
-        Node currentNode = endNode;
-
-        while (currentNode != startNode)
-        {
-            path.Add(currentNode);
-            currentNode = currentNode.ParentNode;
-        }
-
-        path.Reverse();
-
-        gridManager.Path = useTheta ? Theta(path) : path;
-        UnityEngine.Debug.Log("Camino trazado con éxito.");
     }
 }

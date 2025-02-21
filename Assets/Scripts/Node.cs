@@ -23,11 +23,6 @@ public class Node
         Weight = weight;
     }
 
-    public float GetDistance(Node other)
-    {
-        return Vector3.Distance(WorldPosition, other.WorldPosition);
-    }
-
     public bool HasLineOfSight(Node targetNode) => Physics.Raycast(WorldPosition,
         (targetNode.WorldPosition - WorldPosition).normalized,
         Vector3.Distance(WorldPosition, targetNode.WorldPosition));
