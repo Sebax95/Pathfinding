@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using NUnit.Framework;
 using UnityEngine;
 
-public class Player: MonoBehaviour
+public class Player: BaseMonoBehaviour
 {
     //private List<Node> _destination = new();
-    private void Update()
+    public override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.S))
         {

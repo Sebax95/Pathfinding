@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="35ce4cb7-09fb-4a11-a8d0-ce611c4da251" name="Changes" comment="">
+    <list default="true" id="35ce4cb7-09fb-4a11-a8d0-ce611c4da251" name="Changes" comment="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability.">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Pathfinding/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Pathfinding/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assembly-CSharp-Editor.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp-Editor.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Pathfinding.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Pathfinding.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pathfinding.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Pathfinding.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,8 +63,13 @@
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/FSM.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Grid.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/PathFinding.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/TP 3 IA I/Assets/Scripts/AstarManager.cs" root0="SKIP_HIGHLIGHTING" />
@@ -151,6 +159,15 @@
       <workItem from="1739947007713" duration="8609000" />
       <workItem from="1740149052589" duration="8160000" />
     </task>
+    <task id="LOCAL-00001" summary="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability.">
+      <option name="closed" value="true" />
+      <created>1740161349438</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1740161349438</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,5 +197,8 @@
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Refactor pathfinding and grid manager for improved clarity&#10;&#10;Refactored Pathfinding and GridManager scripts to improve code readability, modularity, and maintainability. Introduced helper methods, renamed variables to follow conventions, and optimized key operations. Adjusted Unity scene and settings files to align with these changes." />
+    <MESSAGE value="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability." />
   </component>
 </project>
