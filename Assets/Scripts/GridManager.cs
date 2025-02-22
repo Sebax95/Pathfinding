@@ -10,10 +10,11 @@ public class GridManager : MonoBehaviour
     public Node[,] Grid;
     public bool DisplayGridInGizmos;
     public float WallPenaltyRadius = 5f;
-    public List<Node> Path { get; set; }
 
     private int _gridSizeX, _gridSizeY;
     private float _nodeDiameter;
+    
+    private List<Node> _path;
 
     private void Awake()
     {
@@ -113,6 +114,7 @@ public class GridManager : MonoBehaviour
 
         return Grid[x, y];
     }
+    public void UpdatePaths(List<Node> path) => _path = path;
 
     private void OnDrawGizmos()
     {
@@ -125,7 +127,7 @@ public class GridManager : MonoBehaviour
         {
             Gizmos.color = node.Weight > 0 ? Color.gray : Color.white;
             Gizmos.color = !node.IsWalkable ? Color.red : Gizmos.color;
-            if (Path != null && Path.Contains(node))
+            if (_path != null && _path.Contains(node))
                 Gizmos.color = Color.green;
 
             Gizmos.DrawCube(node.WorldPosition, Vector3.one * _nodeDiameter);

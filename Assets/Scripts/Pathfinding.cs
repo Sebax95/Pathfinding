@@ -16,6 +16,8 @@ public class Pathfinding : MonoBehaviour
     public Transform TargetPosition;
     public float MaxExecutionTimePerFrame = 10f;
 
+    private List<Node> _path;
+    
     private void Awake()
     {
         InitializeInstance();
@@ -27,9 +29,10 @@ public class Pathfinding : MonoBehaviour
         else
             Destroy(gameObject);
     }
-    public void FindPath(Vector3 start, Vector3 end)
+    public List<Node> FindPath(Vector3 start, Vector3 end)
     {
         StartCoroutine(FindPathWithTimeSlicing(start, end));
+        return _path;
     }
 
     private IEnumerator FindPathWithTimeSlicing(Vector3 start, Vector3 target)
@@ -127,7 +130,7 @@ public class Pathfinding : MonoBehaviour
     private void RetracePath(Node startNode, Node targetNode)
     {
         List<Node> path = BuildPathFromNodes(startNode, targetNode);
-        GridManager.Instance.Path = UseTheta ? OptimizePathWithTheta(path) : path;
+        _path = UseTheta ? OptimizePathWithTheta(path) : path;
         Debug.Log("Camino trazado con éxito.");
     }
 

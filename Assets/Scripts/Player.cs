@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : BaseMonoBehaviour
@@ -7,7 +8,7 @@ public class Player : BaseMonoBehaviour
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private Camera _mainCamera;
     private Vector2Int _lastGridPosition;
-    
+    public List<Node> actualPath;
     protected override void Start()
     {
         base.Start();
@@ -60,12 +61,13 @@ public class Player : BaseMonoBehaviour
     public void SetTargetPosition(Vector3 newPosition)
     { 
         SetTarget(newPosition);
-        Pathfinding.Instance.FindPath(transform.position, newPosition);
+        actualPath = Pathfinding.Instance.FindPath(transform.position, newPosition);
     }
     public Vector3 GetTarget() => _targetMarker;
     private void RequestPathToTarget()
     {
-        if (_targetMarker == null) return;
+        if (_targetMarker == null)
+            return;
         
         Pathfinding.Instance.FindPath(transform.position, _targetMarker);
         _fsm.SetState(PlayerState.Follow);
