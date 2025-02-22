@@ -1,40 +1,88 @@
-using System;
-using System.Collections.Generic;
-using DG.Tweening;
-using NUnit.Framework;
 using UnityEngine;
 
-public class Player: BaseMonoBehaviour
+public class Player : BaseMonoBehaviour
 {
-    //private List<Node> _destination = new();
+    private FSM<Player> _fsm;
+    [SerializeField] private Vector3 _targetMarker;
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private Camera _mainCamera;
+    private Vector2Int _lastGridPosition;
+    
+    protected override void Start()
+    {
+        base.Start();
+        InitializeFSM();
+        RegisterInGrid();
+    }
+
+    private void RegisterInGrid()
+    {
+        SpatialGrid.Instance.RegisterObject(gameObject);
+        _lastGridPosition = SpatialGrid.Instance.WorldToGridPosition(transform.position);
+    }
+    public void UpdateGridPosition()
+    {
+        Vector2Int currentGridPos = SpatialGrid.Instance.WorldToGridPosition(transform.position);
+        
+        if(currentGridPos != _lastGridPosition)
+        {
+            SpatialGrid.Instance.UpdateObjectPosition(gameObject);
+            _lastGridPosition = currentGridPos;
+        }
+    }
+
+    private void InitializeFSM()
+    {
+        _fsm = new FSM<Player>(this);
+        _fsm.AddState(PlayerState.Idle, new IdleState(this, _fsm));
+        _fsm.AddState(PlayerState.Follow, new WalkState(this, _fsm));
+        _fsm.SetState(PlayerState.Idle);
+    }
+
     public override void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            MovePlayer(GridManager.Instance.Path, 3);
-        }
+        _fsm.Update();
     }
-
-    private void MovePlayer(List<Node> path, float baseSpeed)
+   
+    public bool GetMouseWorldPosition(out Vector3 position)
     {
-        if (path == null || path.Count < 2) 
-            return;
+        position = Vector3.zero;
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         
-        var sequence = DOTween.Sequence();
-        float fixedY = transform.position.y;
-
-        foreach (var node in path)
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _groundMask))
         {
-            Vector3 targetPosition = new Vector3(node.WorldPosition.x, fixedY, node.WorldPosition.z); 
-            
-            float distance = Vector3.Distance(transform.position, targetPosition);
-            float duration = Mathf.Clamp(distance / baseSpeed, 0.2f, 0.3f); 
-        
-            sequence.Append(transform.DOMove(targetPosition, duration).SetEase(Ease.Linear));
+            position = hit.point;
+            return true;
         }
-
-        
-        sequence.OnComplete(() => Debug.Log("Jugador llegó al destino."));
-        //_destination.Clear();
+        return false;
     }
+
+    public void SetTargetPosition(Vector3 newPosition)
+    { 
+        SetTarget(newPosition);
+        Pathfinding.Instance.FindPath(transform.position, newPosition);
+    }
+    public Vector3 GetTarget() => _targetMarker;
+    private void RequestPathToTarget()
+    {
+        if (_targetMarker == null) return;
+        
+        Pathfinding.Instance.FindPath(transform.position, _targetMarker);
+        _fsm.SetState(PlayerState.Follow);
+    }
+
+    public void SetTarget(Vector3 newTarget) => _targetMarker = newTarget;
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        SpatialGrid.Instance.UnregisterObject(gameObject);
+
+    }
+}
+
+public enum PlayerState
+{
+    Idle,
+    Follow
 }

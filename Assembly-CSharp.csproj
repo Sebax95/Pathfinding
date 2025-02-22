@@ -49,9 +49,14 @@
     <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\Core\BaseMonoBehaviour.cs" />
     <Compile Include="Assets\Scripts\Core\UpdateManager.cs" />
+    <Compile Include="Assets\Scripts\FSM\PlayerStates\WalkState.cs" />
     <Compile Include="Assets\Scripts\Pathfinding.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
+    <Compile Include="Assets\Scripts\FSM\PlayerStates\IdleState.cs" />
+    <Compile Include="Assets\Scripts\SpatialGrid.cs" />
+    <Compile Include="Assets\Scripts\FSM\State.cs" />
+    <Compile Include="Assets\Scripts\FSM\FSM.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.38f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

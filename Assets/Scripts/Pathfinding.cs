@@ -6,7 +6,7 @@ using Debug = UnityEngine.Debug;
 
 public class Pathfinding : MonoBehaviour
 {
-    private static Pathfinding instance;
+    public static Pathfinding Instance;
 
     private const string PATH_NOT_FOUND_MESSAGE = "No se encontró un camino. Tiempo total transcurrido: {0} ms.";
     private const string PATH_FOUND_MESSAGE = "Path encontrado en {0} ms.";
@@ -22,19 +22,14 @@ public class Pathfinding : MonoBehaviour
     }
     private void InitializeInstance()
     {
-        if (instance == null)
-            instance = this;
+        if (Instance == null)
+            Instance = this;
         else
             Destroy(gameObject);
     }
-
-    private void Update()
+    public void FindPath(Vector3 start, Vector3 end)
     {
-        if (IsStartPathfindingKeyPressed())
-        {
-            Debug.Log("Iniciando búsqueda de camino con time slicing...");
-            StartCoroutine(FindPathWithTimeSlicing(StartPosition.position, TargetPosition.position));
-        }
+        StartCoroutine(FindPathWithTimeSlicing(start, end));
     }
 
     private IEnumerator FindPathWithTimeSlicing(Vector3 start, Vector3 target)
@@ -72,8 +67,6 @@ public class Pathfinding : MonoBehaviour
         totalStopwatch.Stop();
         Debug.LogFormat(PATH_NOT_FOUND_MESSAGE, totalStopwatch.ElapsedMilliseconds);
     }
-    
-    private bool IsStartPathfindingKeyPressed() => Input.GetKeyDown(KeyCode.Space);
 
     private Stopwatch StartStopwatch()
     {

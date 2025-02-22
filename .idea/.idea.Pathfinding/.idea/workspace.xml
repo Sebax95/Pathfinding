@@ -4,14 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="35ce4cb7-09fb-4a11-a8d0-ce611c4da251" name="Changes" comment="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability.">
+    <list default="true" id="35ce4cb7-09fb-4a11-a8d0-ce611c4da251" name="Changes" comment="Add UpdateManager system with editor utilities&#10;&#10;Introduced the UpdateManager, BaseMonoBehaviour, and accompanying editor scripts to streamline managed updates in Unity. Added tools for automating the integration of the UpdateManager system and updated the scene to integrate the new feature. This enhances code maintainability, pause management, and editor workflow.">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/FSM.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/FSM.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/PlayerStates.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/PlayerStates/IdleState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/PlayerStates/IdleState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/PlayerStates/WalkState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/PlayerStates/WalkState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/State.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FSM/State.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/SpatialGrid.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/SpatialGrid.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Pathfinding/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Pathfinding/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assembly-CSharp-Editor.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp-Editor.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Pathfinding.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Pathfinding.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pathfinding.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Pathfinding.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,12 +78,20 @@
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///AIAssistantSnippet." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../AI 2 clase 2/Assets/Generators.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/Entity.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/FSM.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/Lider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/State.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Enemys/States/Lider/DieStateLider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/Grid.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/Final IA 1/Assets/Scripts/PathFinding.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../IA 1/TP 3 IA I/Assets/Scripts/AstarManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Parcial IA2 Valente Perkins Orrillo/Assets/Grilla/IA II/SpatialGrid.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/Respaldo nuevo/Proyectos/Pathfinding/Assets/Scripts/GridManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/Respaldo nuevo/Proyectos/Pathfinding/Assets/Scripts/GridManager.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -81,7 +100,9 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2tFNcOEXF1F2HDQrbdnenlixPO3" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -167,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740161349438</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add UpdateManager system with editor utilities&#10;&#10;Introduced the UpdateManager, BaseMonoBehaviour, and accompanying editor scripts to streamline managed updates in Unity. Added tools for automating the integration of the UpdateManager system and updated the scene to integrate the new feature. This enhances code maintainability, pause management, and editor workflow.">
+      <option name="closed" value="true" />
+      <created>1740170103317</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1740170103317</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,6 +228,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Refactor pathfinding and grid manager for improved clarity&#10;&#10;Refactored Pathfinding and GridManager scripts to improve code readability, modularity, and maintainability. Introduced helper methods, renamed variables to follow conventions, and optimized key operations. Adjusted Unity scene and settings files to align with these changes." />
     <MESSAGE value="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor pathfinding logic and improve grid management.&#10;&#10;Updated pathfinding logic to separate responsibilities and enhance readability. Optimized grid generation, node management, and neighbor processing in GridManager. Refactored code structure in Pathfinding.cs for improved clarity and maintainability." />
+    <MESSAGE value="Add UpdateManager system with editor utilities&#10;&#10;Introduced the UpdateManager, BaseMonoBehaviour, and accompanying editor scripts to streamline managed updates in Unity. Added tools for automating the integration of the UpdateManager system and updated the scene to integrate the new feature. This enhances code maintainability, pause management, and editor workflow." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add UpdateManager system with editor utilities&#10;&#10;Introduced the UpdateManager, BaseMonoBehaviour, and accompanying editor scripts to streamline managed updates in Unity. Added tools for automating the integration of the UpdateManager system and updated the scene to integrate the new feature. This enhances code maintainability, pause management, and editor workflow." />
   </component>
 </project>
