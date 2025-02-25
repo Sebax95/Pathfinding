@@ -64,7 +64,7 @@ public class GridManager : MonoBehaviour
                 bool isWalkable = !Physics.CheckSphere(worldPosition, NodeRadius, UnwalkableMask);
                 float movementPenalty = CalculateMovementPenalty(worldPosition, isWalkable);
 
-                Grid[x, y] = CreateNode(isWalkable, worldPosition, x, y, movementPenalty);
+                Grid[x, y] =  new(isWalkable, worldPosition, x, y, movementPenalty);
             }
         }
     }
@@ -77,9 +77,7 @@ public class GridManager : MonoBehaviour
         isWalkable && Physics.CheckSphere(worldPosition, NodeRadius * WallPenaltyRadius, UnwalkableMask)
             ? 1f
             : 0f;
-
-    private Node CreateNode(bool isWalkable, Vector3 worldPosition, int x, int y, float movementPenalty) =>
-        new(isWalkable, worldPosition, x, y, movementPenalty);
+       
 
     public List<Node> GetNeighbors(Node node)
     {
@@ -100,6 +98,20 @@ public class GridManager : MonoBehaviour
             }
         }
         return neighbors;
+    }
+
+    public Node FindNearNode(Vector3 position)
+    {
+        var dist = Mathf.Infinity;
+        Node nearNode = null;
+        foreach (var item in Grid)
+        {
+            if ((!(Vector3.Distance(item.WorldPosition, position) < dist))) 
+                continue;
+            dist = Vector3.Distance(item.WorldPosition, position);
+            nearNode = item;
+        }
+        return nearNode;
     }
 
     private bool IsInBounds(int x, int y) => x >= 0 && x < _gridSizeX && y >= 0 && y < _gridSizeY;

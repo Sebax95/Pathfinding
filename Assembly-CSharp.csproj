@@ -53,8 +53,10 @@
     <Compile Include="Assets\Scripts\Pathfinding.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
+    <Compile Include="Assets\Scripts\WaypointNode.cs" />
     <Compile Include="Assets\Scripts\FSM\PlayerStates\IdleState.cs" />
     <Compile Include="Assets\Scripts\SpatialGrid.cs" />
+    <Compile Include="Assets\Scripts\FSM\PlayerStates\PatrolState.cs" />
     <Compile Include="Assets\Scripts\FSM\State.cs" />
     <Compile Include="Assets\Scripts\FSM\FSM.cs" />
     <Reference Include="UnityEngine">

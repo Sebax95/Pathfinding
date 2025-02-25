@@ -53,7 +53,6 @@ public class Pathfinding : MonoBehaviour
             if (currentNode == targetNode)
             {
                 totalStopwatch.Stop();
-                Debug.LogFormat(PATH_FOUND_MESSAGE, totalStopwatch.ElapsedMilliseconds);
                 RetracePath(startNode, targetNode);
                 yield break;
             }
@@ -61,10 +60,8 @@ public class Pathfinding : MonoBehaviour
             ProcessNeighbors(currentNode, targetNode, openSet, closedSet);
 
             if (!ShouldPauseExecution())
-            {
-                Debug.Log("Detengo ejecución para el siguiente frame...");
                 yield return null;
-            }
+            
         }
 
         totalStopwatch.Stop();
@@ -131,7 +128,6 @@ public class Pathfinding : MonoBehaviour
     {
         List<Node> path = BuildPathFromNodes(startNode, targetNode);
         _path = UseTheta ? OptimizePathWithTheta(path) : path;
-        Debug.Log("Camino trazado con éxito.");
     }
 
     private List<Node> BuildPathFromNodes(Node startNode, Node targetNode)
