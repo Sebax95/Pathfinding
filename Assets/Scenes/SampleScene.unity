@@ -1654,7 +1654,7 @@ MonoBehaviour:
   GridSize: {x: 10, y: 10}
   NodeRadius: 0.1
   DisplayGridInGizmos: 1
-  WallPenaltyRadius: 2
+  WallPenaltyRadius: 3
 --- !u!64 &1492563934
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1758,8 +1758,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GridOrigin: {x: -5, y: 0, z: -5}
-  GridDimensions: {x: 10, y: 10}
-  CellSize: 1
+  GridDimensions: {x: 3, y: 3}
+  CellSize: 3.33
 --- !u!1 &1505473821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,7 +1822,7 @@ GameObject:
   - component: {fileID: 1543208811}
   m_Layer: 0
   m_Name: Objective
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1910,7 +1910,7 @@ Transform:
   m_GameObject: {fileID: 1543208810}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0.065936655, z: -3.8454263}
+  m_LocalPosition: {x: 4.04, y: 0.4, z: 2.67}
   m_LocalScale: {x: 0.33709, y: 0.33709, z: 0.33709}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2091,6 +2091,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _mainCamera: {fileID: 330585545}
+  visionRadius: 5
+  fieldOfView: 60
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  targetsInRadius: []
   initialNode: {fileID: 843193651}
   finalNode: {fileID: 1569872046}
   speed: 5

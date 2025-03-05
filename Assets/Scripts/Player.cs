@@ -18,6 +18,15 @@ public class Player : BaseMonoBehaviour
     
     public List<Node> actualPath;
 
+    #region Line Of Sight Variables
+
+    public float visionRadius = 10f;
+    public float fieldOfView = 90f;
+    public LayerMask obstacleMask;
+    public Transform target;
+    public Vector3 lastPosition;
+    #endregion
+
     #region Pathfinding Variables
     private Queue<Node> _currentPath;
     private bool _isUpdatingPath;
@@ -33,14 +42,30 @@ public class Player : BaseMonoBehaviour
     public float speed;
     private Tween _currentTween;
 
-    
+    public bool IsMoving
+    {
+        get => _currentTween != null && _currentTween.IsPlaying();
+    }
+
+
     protected override void Start()
     {
         base.Start();
-        _currentPath = new ();
+        _currentPath = new();
         InitializeFSM();
         RegisterInGrid();
     }
+    private void InitializeFSM()
+    {
+        _fsm = new FSM<Player>(this);
+        _fsm.AddState(PlayerState.Idle, new IdleState(this, _fsm));
+        _fsm.AddState(PlayerState.Patrol, new PatrolState(this, _fsm));
+        _fsm.AddState(PlayerState.Chase, new ChaseState(this, _fsm));
+        _fsm.AddState(PlayerState.Shoot, new ShootState(this, _fsm));
+        _fsm.SetState(PlayerState.Patrol);
+    }
+
+    #region SpatialGrid
 
     private void RegisterInGrid()
     {
@@ -57,15 +82,9 @@ public class Player : BaseMonoBehaviour
         _lastGridPosition = currentGridPos;
     }
 
-    private void InitializeFSM()
-    {
-        _fsm = new FSM<Player>(this);
-        _fsm.AddState(PlayerState.Idle, new IdleState(this, _fsm));
-        _fsm.AddState(PlayerState.Follow, new WalkState(this, _fsm));
-        _fsm.AddState(PlayerState.Patrol, new PatrolState(this, _fsm));
-        _fsm.SetState(PlayerState.Patrol);
-    }
 
+    #endregion
+    
     public override void OnUpdate() => _fsm.Update();
     
     public bool GetMouseWorldPosition(out Vector3 position)
@@ -79,24 +98,31 @@ public class Player : BaseMonoBehaviour
         return true;
     }
 
-    public void SetTargetPosition(Vector3 newPosition)
-    { 
-        Debug.Log("Llamando al pathfinding");
-        SetTarget(newPosition);
-        actualPath = Pathfinding.Instance.FindPath(transform.position, newPosition);
-        _currentPath = new Queue<Node>(actualPath);
-    }
-    private void RequestPathToTarget()
-    {
-        if (_targetMarker == null)
-            return;
-        
-        Pathfinding.Instance.FindPath(transform.position, _targetMarker);
-        _fsm.SetState(PlayerState.Follow);
-    }
-    public Vector3 GetTarget() => _targetMarker;
+    #region Line Of Sight
 
-    private void SetTarget(Vector3 newTarget) => _targetMarker = newTarget;
+    public bool CheckLineOfSight()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.2f;
+        
+        Vector3 directionToTarget = target.transform.position - origin;
+        float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
+        float distanceToTarget = Vector3.Distance(origin, target.transform.position);
+        
+        if (angleToTarget > fieldOfView || distanceToTarget > visionRadius)
+            return false;
+        if (Physics.Raycast(origin, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget,
+                obstacleMask))
+        {
+            Debug.DrawRay(origin, directionToTarget.normalized * hitInfo.distance, Color.red);
+            return false;
+        }
+        
+        Debug.DrawRay(origin, directionToTarget.normalized * distanceToTarget, Color.green);
+        lastPosition = target.transform.position;
+        return true;
+    }
+
+    #endregion
 
     #region PathFinding Movement
 
@@ -114,7 +140,17 @@ public class Player : BaseMonoBehaviour
             transform.position.y,
             targetNode.WorldPosition.z
         );
-        _currentTween = transform.DOMove(targetPosition, CalculateDuration(targetPosition))
+        
+        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
+        
+        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+        
+        float duration = CalculateDuration(targetPosition);
+        transform.DORotate(targetRotation.eulerAngles, duration)
+            .SetEase(Ease.Linear);
+
+        
+        _currentTween = transform.DOMove(targetPosition, duration)
             .SetEase(Ease.Linear)
             .OnComplete(() => {
                 MoveToNextNode(onComplete);
@@ -127,23 +163,48 @@ public class Player : BaseMonoBehaviour
         float distance = Vector3.Distance(transform.position, targetPosition);
         return Mathf.Clamp(distance / 3f, 0.15f, 0.5f);
     }
+    
+    public Vector3 GetTarget() => _targetMarker;
 
-    private bool ValidatePath()
-    {
-        if (_currentPath == null || _currentPath.Count == 0)
-        {
-            Debug.Log("Camino no válido");
-            return false;
-        }
-        return true;
+    private void SetTarget(Vector3 newTarget) => _targetMarker = newTarget;
+    
+    public void SetTargetPosition(Vector3 newPosition)
+    { 
+        SetTarget(newPosition);
+        actualPath = Pathfinding.Instance.FindPath(transform.position, newPosition);
+        _currentPath = new Queue<Node>(actualPath);
     }
 
+    public void StopMoving()
+    {
+        _currentTween.Kill();
+    }
     #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.2f; 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(origin, visionRadius);
+        Gizmos.color = Color.yellow;
+
+        Vector3 rightLimit = Quaternion.AngleAxis(fieldOfView, transform.up) * transform.forward;
+        Gizmos.DrawLine(origin, origin + (rightLimit * visionRadius));
+
+        Vector3 leftLimit = Quaternion.AngleAxis(-fieldOfView, transform.up) * transform.forward;
+        Gizmos.DrawLine(origin, origin + (leftLimit * visionRadius));
+
+        if (target != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(target.transform.position, origin);
+        }
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
         SpatialGrid.Instance.UnregisterObject(gameObject);
-
     }
 }
 
@@ -151,5 +212,7 @@ public enum PlayerState
 {
     Idle,
     Follow,
-    Patrol
+    Patrol,
+    Chase,
+    Shoot
 }

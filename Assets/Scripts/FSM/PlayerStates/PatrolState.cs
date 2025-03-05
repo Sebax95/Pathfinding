@@ -8,7 +8,6 @@ public class PatrolState: State<Player>
     private int _currentNodeIndex;
     private bool _isReversing;
     private bool _reversePatrolling;
-    private Tween _movementTween;
     public PatrolState(Player owner, FSM<Player> fsm) : base(owner, fsm) { }
 
     #region Patrol Methods
@@ -65,13 +64,15 @@ public class PatrolState: State<Player>
     public override void Execute()
     {
         _owner.UpdateGridPosition();
+        if(_owner.CheckLineOfSight())
+           _fsm.SetState(PlayerState.Chase);
     }
 
     public override void FixedExecute() { }
 
     public override void Exit()
     {
-        _movementTween?.Kill();
+        _owner.StopMoving();
     }
 
     #endregion
