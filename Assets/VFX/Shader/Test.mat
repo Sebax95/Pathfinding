@@ -53,7 +53,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Size: 3.33
+    - _Size: 5
     - _SpecularHighlights: 1
     - _TessMax: 25
     - _TessMin: 10
