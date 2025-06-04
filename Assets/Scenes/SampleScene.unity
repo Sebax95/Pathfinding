@@ -1582,7 +1582,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1393415636}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Obstables
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1910,7 +1910,7 @@ Transform:
   m_GameObject: {fileID: 1543208810}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.04, y: 0.4, z: 2.67}
+  m_LocalPosition: {x: 4.04, y: 0.28, z: 2.67}
   m_LocalScale: {x: 0.33709, y: 0.33709, z: 0.33709}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2095,8 +2095,9 @@ MonoBehaviour:
   fieldOfView: 60
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
-  targetsInRadius: []
+    m_Bits: 64
+  target: {fileID: 1543208814}
+  lastPosition: {x: 0, y: 0, z: 0}
   initialNode: {fileID: 843193651}
   finalNode: {fileID: 1569872046}
   speed: 5
